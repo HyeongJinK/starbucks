@@ -1,4 +1,12 @@
 package khj.pilot;
 
-public interface Beverage {
+import lombok.Getter;
+
+import java.math.BigDecimal;
+
+@Getter
+public class Beverage {
+    long idx;
+    String name;
+    BigDecimal price;
 }
