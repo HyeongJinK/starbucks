@@ -9,7 +9,18 @@ public abstract class CommonEmployee  implements Employee{
         this.processingTime = processingTime;
     }
 
-    protected String getName() {
+    @Override
+    public String getName() {
         return this.name;
+    }
+
+    @Override
+    public int getProcessingTime() {
+        return processingTime;
+    }
+
+    @Override
+    public int getMillisProcessingTime() {
+        return processingTime * 1000;
     }
 }
