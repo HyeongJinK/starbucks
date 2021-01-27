@@ -17,6 +17,7 @@ import java.util.concurrent.*;
 public class Store {
     Logger log = LoggerFactory.getLogger(Store.class);
     private List<Employee> employees = new ArrayList<>();      // 직원
+    private List<Beverage> beverages = new ArrayList<>();
     private List<Order> orders = new ArrayList<>();
     private final long OPERATING_TIME = 5;      // 운영시간
     private List<Future> employeeFutures = new ArrayList();
