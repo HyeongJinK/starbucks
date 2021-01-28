@@ -1,11 +1,14 @@
-package khj.pilot;
+package khj.pilot.store;
 
 import khj.pilot.employee.BaristaEmployee;
 import khj.pilot.employee.ClerkEmployee;
 import khj.pilot.employee.Employee;
+import khj.pilot.order.Order;
+import khj.pilot.product.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -17,18 +20,32 @@ import java.util.concurrent.*;
 public class Store {
     Logger log = LoggerFactory.getLogger(Store.class);
     private List<Employee> employees = new ArrayList<>();      // 직원
-    private List<Beverage> beverages = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
     private List<Order> orders = new ArrayList<>();
     private final long OPERATING_TIME = 5;      // 운영시간
     private List<Future> employeeFutures = new ArrayList();
 
+    public Store () {
+        initEmployees();
+        initProduct();
+    }
+
+    public Product getProduct(int idx) {
+        return products.get(idx);
+    }
     /**
-     * 초기화
-     */
-    public void businessPreparation() {
+     * 직원 초기화
+     * */
+    private void initEmployees() {
         employees.add(new ClerkEmployee("Eric", 2));
         employees.add(new BaristaEmployee("Tom", 3));
         employees.add(new BaristaEmployee("Chicol", 3));
+    }
+    /**
+     * 상품 초기화
+     * */
+    private void initProduct() {
+        products.add(new Product(0, "아이스 아메리카노", BigDecimal.valueOf(1500l)));
     }
     /**
      *  TODO 영업 시작
@@ -73,7 +90,13 @@ public class Store {
                 }));
             });
     }
+    /**
+     * 주문 추
+     * */
 
+    public void addOrder(Order order) {
+        orders.add(order);
+    }
     /**
      * TODO 영업 종료 후 판매 내역 조회
      * */
