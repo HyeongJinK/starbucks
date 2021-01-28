@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class OrderTest {
 
     @Test
-    public void totalPrice() {
+    public void totalPriceTest() {
         List<Product> productList = new ArrayList<>();
         productList.add(new Product(0, "test", BigDecimal.valueOf(1000l)));
         productList.add(new Product(1, "test2", BigDecimal.valueOf(2000l)));

@@ -4,12 +4,14 @@ import khj.pilot.order.Order;
 import khj.pilot.order.OrderType;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 public class DeskTest {
     @Test
     public void orderTest() {
-        Desk desk = new Desk();
+        Desk desk = new Desk(new ArrayList<>());
 
         Order order = desk.newOrder()
             .addProduct(0)
