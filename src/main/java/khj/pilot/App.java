@@ -1,6 +1,5 @@
 package khj.pilot;
 
-import khj.pilot.store.Desk;
 import khj.pilot.store.Store;
 
 import java.util.Scanner;
@@ -10,14 +9,13 @@ public class App
     public static void main( String[] args )
     {
         Store store = new Store();
-        Desk desk = new Desk(store);
 
         Scanner sc = new Scanner(System.in);
         String status = "";
         while (!isQuit(status)) {
             System.out.print("입력(e[enter]: 영업시작, q[quit]: 종료  :" );
             status = sc.nextLine();
-
+            System.out.println(status);
             if (isEnter(status)) {
                 store.start();
             }

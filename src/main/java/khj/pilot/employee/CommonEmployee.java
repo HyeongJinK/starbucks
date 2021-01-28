@@ -1,22 +1,21 @@
 package khj.pilot.employee;
 
-public abstract class CommonEmployee  implements Employee{
+import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+public abstract class CommonEmployee implements Employee{
     protected String name;
+    protected EmployeeStatus employeeStatus;
     protected int processingTime;
+    protected List<EmployeeLog> employeeLogs = new ArrayList<>();
 
     protected CommonEmployee(String name, int processingTime) {
         this.name = name;
         this.processingTime = processingTime;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public int getProcessingTime() {
-        return processingTime;
+        this.employeeStatus = EmployeeStatus.Waiting;
     }
 
     @Override

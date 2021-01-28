@@ -3,6 +3,7 @@ package khj.pilot.store;
 import khj.pilot.employee.BaristaEmployee;
 import khj.pilot.employee.ClerkEmployee;
 import khj.pilot.employee.Employee;
+import khj.pilot.employee.EmployeeStatus;
 import khj.pilot.exception.OutOfStockException;
 import khj.pilot.order.Order;
 import khj.pilot.product.Product;
@@ -12,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.*;
 
 /**
@@ -21,7 +21,8 @@ import java.util.concurrent.*;
 public class Store {
     Logger log = LoggerFactory.getLogger(Store.class);
     private final long OPERATING_TIME = 10;                     // 운영시간
-    private List<Employee> employees = new ArrayList<>();      // 직원
+    private final long MAX_CUSTOMER = 5;                        // 최대 입장 손님
+    private List<Employee> employees = new ArrayList<>();       // 직원
     private List<Product> products = new ArrayList<>();
     private List<Order> orders = new ArrayList<>();
     private List<Future> employeeFutures = new ArrayList();
@@ -77,16 +78,16 @@ public class Store {
      * */
     public void start() {
         ExecutorService storeExecutor = Executors.newFixedThreadPool(1);
-        Scanner sc = new Scanner(System.in);
+
         Future storeFuture = storeExecutor.submit(() -> {
-            String orderNum = "";
+            Desk desk = new Desk(this);
+
             log.info("영업시작");
             working();
 
             while(true) {
                 Thread.sleep(1000);
-                log.info("...");
-
+                // log.info("...");
             }
         });
 
@@ -112,8 +113,8 @@ public class Store {
 
                 employeeFutures.add(executor.submit(() -> {
                     while (true) {
-                        log.info(employee.getName());
-                        Thread.sleep(employee.getMillisProcessingTime());
+                        if (employee.getEmployeeStatus().equals(EmployeeStatus.Waiting))
+                            employee.working(orders);
                     }
                 }));
             });
