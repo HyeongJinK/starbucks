@@ -3,6 +3,7 @@ package khj.pilot.order;
 import khj.pilot.product.Product;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,5 +20,13 @@ public class Order {
         this.products = products;
         orderType = OrderType.ON_ORDER;
         orderDate = LocalDateTime.now();
+    }
+    /**
+     * 주문금액 계산
+     * */
+    public BigDecimal getTotalPrice() {
+        return products.stream()
+                .map(p -> p.getPrice())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
