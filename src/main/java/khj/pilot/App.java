@@ -1,17 +1,38 @@
 package khj.pilot;
 
+import khj.pilot.store.Desk;
 import khj.pilot.store.Store;
 
-/**
- * Hello world!
- *
- */
+import java.util.Scanner;
+
 public class App 
 {
     public static void main( String[] args )
     {
         Store store = new Store();
-        store.start();
+        Desk desk = new Desk(store);
+
+        Scanner sc = new Scanner(System.in);
+        String status = "";
+        while (!isQuit(status)) {
+            System.out.print("입력(e[enter]: 영업시작, q[quit]: 종료  :" );
+            status = sc.nextLine();
+
+            if (isEnter(status)) {
+                store.start();
+            }
+        }
+        System.exit(0);
+    }
+
+    public static boolean isEnter(String status) {
+        status = status.toLowerCase();
+        return status.equals("e") || status.equals("enter");
+    }
+
+    public static boolean isQuit(String status) {
+        status = status.toLowerCase();
+        return status.equals("q") || status.equals("quit");
     }
 }
 

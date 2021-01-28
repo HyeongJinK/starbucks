@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class DeskTest {
     @Test
     public void orderTest() {
-        Desk desk = new Desk(new ArrayList<>());
+        Desk desk = new Desk(new Store());
 
         Order order = desk.newOrder()
             .addProduct(0)
