@@ -1,6 +1,6 @@
 package khj.pilot.employee;
 
-import khj.pilot.Order;
+import khj.pilot.order.Order;
 
 import java.util.List;
 
