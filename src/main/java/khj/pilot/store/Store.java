@@ -24,14 +24,16 @@ public class Store {
     private List<Order> orders = new ArrayList<>();
     private final long OPERATING_TIME = 5;      // 운영시간
     private List<Future> employeeFutures = new ArrayList();
+    private Desk desk;
 
     public Store () {
         initEmployees();
         initProduct();
+        desk = new Desk(products);
     }
 
-    public Product getProduct(int idx) {
-        return products.get(idx);
+    public Desk getDesk() {
+        return this.desk;
     }
     /**
      * 직원 초기화
@@ -103,8 +105,11 @@ public class Store {
     public void closingBusiness() {
     }
     /**
-     * TODO 정산
+     * 정산액 계산
      * */
-    public void calculate() {
+    public BigDecimal calculate() {
+        return orders.stream()
+                .map(o -> o.getTotalPrice())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

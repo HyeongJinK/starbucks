@@ -2,24 +2,26 @@ package khj.pilot.store;
 
 import khj.pilot.order.Order;
 import khj.pilot.product.Product;
+import lombok.AllArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 public class Desk {
-    private Store store = new Store();
-    private List<Product> products = new ArrayList<>();
+    private List<Product> products;
+
     /**
      * 신규주문
      * */
     public Desk newOrder () {
-        return new Desk();
+        products.clear();
+        return this;
     }
     /**
      * 주문하기
      * */
     public Desk addProduct(int idx) {
-        products.add(store.getProduct(idx));
+        products.add(products.get(idx));
         return this;
     }
     /**
