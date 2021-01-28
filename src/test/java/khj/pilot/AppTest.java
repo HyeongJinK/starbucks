@@ -1,20 +1,21 @@
 package khj.pilot;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-{
-    /**
-     * Rigorous Test :-)
-     */
+import static org.junit.Assert.assertEquals;
+
+public class AppTest {
     @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+    public void TestIsQuit() {
+        assertEquals(App.isQuit("a"), false);
+        assertEquals(App.isQuit("q"), true);
+        assertEquals(App.isQuit("quit"), true);
+    }
+
+    @Test
+    public void TestIsEnter() {
+        assertEquals(App.isEnter("o"), false);
+        assertEquals(App.isEnter("e"), true);
+        assertEquals(App.isEnter("enter"), true);
     }
 }
