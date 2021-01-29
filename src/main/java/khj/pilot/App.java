@@ -15,7 +15,6 @@ public class App
         while (!isQuit(status)) {
             System.out.print("입력(e[enter]: 영업시작, q[quit]: 종료  :" );
             status = sc.nextLine();
-            System.out.println(status);
             if (isEnter(status)) {
                 store.start();
             }

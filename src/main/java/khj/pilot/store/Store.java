@@ -4,8 +4,8 @@ import khj.pilot.employee.BaristaEmployee;
 import khj.pilot.employee.ClerkEmployee;
 import khj.pilot.employee.Employee;
 import khj.pilot.employee.EmployeeStatus;
-import khj.pilot.exception.OutOfStockException;
 import khj.pilot.order.Order;
+import khj.pilot.product.Menu;
 import khj.pilot.product.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,33 +23,19 @@ public class Store {
     private final long OPERATING_TIME = 10;                     // 운영시간
     private final long MAX_CUSTOMER = 5;                        // 최대 입장 손님
     private List<Employee> employees = new ArrayList<>();       // 직원
-    private List<Product> products = new ArrayList<>();
     private List<Order> orders = new ArrayList<>();
     private List<Future> employeeFutures = new ArrayList();
+    private Menu menu;
 
     public Store () {
+        menu = new Menu();
         initEmployees(null);
-        initProduct(null);
     }
     public Store (List<Employee> employees, List<Product> products) {
+        menu = new Menu(products);
         initEmployees(employees);
-        initProduct(products);
     }
 
-    /**
-     * 상품정보 리턴
-     * */
-    public Product getProduct(int idx) {
-        Product product = products.get(idx);
-
-        stockCheck(idx, product);
-        return products.get(idx);
-    }
-
-    private void stockCheck(int idx, Product product) {
-        if (product.getStock() == 0) throw new OutOfStockException("재고 부족");
-        if (product.getStock() != -1) products.get(idx).subStock();
-    }
 
     /**
      * 직원 초기화
@@ -63,16 +49,7 @@ public class Store {
             this.employees = employees;
         }
     }
-    /**
-     * 상품 초기화
-     * */
-    private void initProduct(List<Product> products) {
-        if (products == null) {
-            this.products.add(new Product(0, "아이스 아메리카노", BigDecimal.valueOf(1500l)));
-        } else {
-            this.products = products;
-        }
-    }
+
     /**
      *  TODO 영업 시작
      * */
@@ -80,24 +57,19 @@ public class Store {
         ExecutorService storeExecutor = Executors.newFixedThreadPool(1);
 
         Future storeFuture = storeExecutor.submit(() -> {
-            Desk desk = new Desk(this);
-
             log.info("영업시작");
             working();
 
-            while(true) {
+            while (true) {
                 Thread.sleep(1000);
-                // log.info("...");
             }
         });
 
         try {
             storeFuture.get(OPERATING_TIME, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
-        } catch (TimeoutException e) {
+        } catch (InterruptedException | TimeoutException e) {
             log.info("영업종료");
             storeFuture.cancel(true);                           // 상점 종료
             employeeFutures.forEach(ef -> ef.cancel(true));     // 직원 종료
@@ -106,18 +78,19 @@ public class Store {
     /**
      * 직원 작업 수행
      * */
-    public void working() {
-        employees.parallelStream()
-            .forEach(employee -> {
-                ExecutorService executor = Executors.newFixedThreadPool(1);
-
-                employeeFutures.add(executor.submit(() -> {
-                    while (true) {
-                        if (employee.getEmployeeStatus().equals(EmployeeStatus.Waiting))
-                            employee.working(orders);
+    public void working() throws InterruptedException {
+        ExecutorService executor = Executors.newFixedThreadPool(employees.size());
+        employees.forEach(employee -> {
+            employeeFutures.add(executor.submit(() -> {
+                while (true) {
+                    if (employee.getEmployeeStatus().equals(EmployeeStatus.Waiting)) {
+                        employee.working(orders, menu);
                     }
-                }));
-            });
+                }
+            }));
+        });
+        executor.shutdown();
+        executor.awaitTermination(1l, TimeUnit.MINUTES);
     }
     /**
      * 주문 추가
@@ -130,7 +103,21 @@ public class Store {
      * TODO 영업 종료 후 판매 내역 조회
      * */
     public void closingBusiness() {
+        orders.stream()
+            .forEach(o -> {
+                log.info("판매시각 : " + o.getOrderDate().toString());
+                printProductName(o);
+                log.info("판매금액 : " + o.getTotalPrice().toString());
+            });
     }
+
+    private void printProductName(Order o) {
+        o.getProducts().stream()
+            .forEach((p) -> {
+                log.info(p.getName());
+            });
+    }
+
     /**
      * 정산액 계산
      * */

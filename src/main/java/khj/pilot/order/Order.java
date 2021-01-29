@@ -29,4 +29,12 @@ public class Order {
                 .map(p -> p.getPrice())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public void making() {
+        this.orderType = OrderType.MAKING;
+    }
+
+    public void complete() {
+        this.orderType = OrderType.COMPLETE;
+    }
 }
