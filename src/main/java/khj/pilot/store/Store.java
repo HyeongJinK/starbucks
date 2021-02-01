@@ -1,9 +1,6 @@
 package khj.pilot.store;
 
-import khj.pilot.employee.BaristaEmployee;
-import khj.pilot.employee.ClerkEmployee;
-import khj.pilot.employee.Employee;
-import khj.pilot.employee.EmployeeStatus;
+import khj.pilot.employee.*;
 import khj.pilot.order.Order;
 import khj.pilot.order.OrderType;
 import khj.pilot.product.Menu;
@@ -15,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * 매장
@@ -151,5 +149,20 @@ public class Store {
     }
     public void printCalculate() {
         log.info("총 매출액은 : " +calculate()+ " 입니다.");
+    }
+    /**
+     * 특정직원 이름으로 조회
+     * @Param name      직원이름
+     * */
+    public List<Employee> getEmployeeByName(String name) {
+        return employees.stream()
+                .filter(e -> e.getName().equals(name))
+                .collect(Collectors.toList());
+    }
+
+    public void drawEmployeeLogByName(String name) {
+        List<Employee> employees = getEmployeeByName(name);
+        employees.forEach(e -> e.getLog()
+                .forEach(l -> log.info("["+e.getName()+"] " + l.getLogDate().toString() + "  " +l.getMessage())));
     }
 }
