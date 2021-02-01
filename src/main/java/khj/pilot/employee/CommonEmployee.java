@@ -22,4 +22,12 @@ public abstract class CommonEmployee implements Employee{
     public int getMillisProcessingTime() {
         return processingTime * 1000;
     }
+
+    @Override
+    public List<EmployeeLog> getLog() {
+        return employeeLogs;
+    }
+    protected void setLog(EmployeeLog employeeLog) {
+        employeeLogs.add(employeeLog);
+    }
 }
