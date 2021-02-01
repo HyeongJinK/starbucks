@@ -9,6 +9,7 @@ import khj.pilot.store.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
@@ -20,21 +21,25 @@ public class ClerkEmployee extends CommonEmployee {
         super(name, processingTime);
     }
 
+    public void setSc(InputStream in) {
+        this.sc = new Scanner(in);
+    }
+
     @Override
     public synchronized void working(Store store, Menu menu) throws InterruptedException {
         if (store.checkEnterCustomer()) {
-            Desk desk = new Desk();
             this.employeeStatus = EmployeeStatus.Working;
             while (true) {
-                Product product = inputOrder(menu);
-                if (workOrderComplete(store, desk, product)) break;
+                if (workOrderComplete(store, inputOrder(menu))) break;
             }
         }
     }
 
-    private boolean workOrderComplete(Store store, Desk desk, Product product) throws InterruptedException {
+    private boolean workOrderComplete(Store store, Product product) throws InterruptedException {
+        Desk desk = new Desk();
+
         if (product != null) {
-            log.info(product.getName() + "주문하셨습니다.");
+            log.info(product.getName() + " 주문하셨습니다.");
             Thread.sleep(getMillisProcessingTime());    // 작업시간
             log.info("접수완료");
             store.addOrder(desk.newOrder()
@@ -50,7 +55,7 @@ public class ClerkEmployee extends CommonEmployee {
 
     private Product inputOrder(Menu menu) {
         String orderNum;
-        System.out.println("[" + this.name + "]상품 번호를 입력하세요  :");
+        log.info("[" + this.name + "]상품 번호를 입력하세요  :");
         orderNum = sc.nextLine();
 
         try {

@@ -6,6 +6,7 @@ import khj.pilot.store.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class BaristaEmployee extends CommonEmployee {
@@ -24,6 +25,7 @@ public class BaristaEmployee extends CommonEmployee {
             log.info("[" + this.name+ "]주문이 들어옴");
             Thread.sleep(getMillisProcessingTime());    // 작업시간
             order.complete();
+            setLog(new EmployeeLog(LocalDateTime.now(), order.getProducts().get(0).getName()));
             log.info("[" + this.name+ "]주문 처리 완료");
         }
 

@@ -7,7 +7,6 @@ import khj.pilot.employee.EmployeeStatus;
 import khj.pilot.order.Order;
 import khj.pilot.order.OrderType;
 import khj.pilot.product.Menu;
-import khj.pilot.product.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +33,9 @@ public class Store {
         menu = new Menu();
         initEmployees(null);
     }
-    public Store (List<Employee> employees, List<Product> products) {
-        menu = new Menu(products);
-        initEmployees(employees);
+
+    public List<Order> getOrders() {
+        return orders;
     }
 
     /**
@@ -80,7 +79,7 @@ public class Store {
     /**
      * 직원 작업 수행
      * */
-    public void working() throws InterruptedException {
+    private void working() throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(employees.size());
         employees.forEach(employee -> {
             employeeFutures.add(executor.submit(() -> {

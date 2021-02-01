@@ -24,7 +24,7 @@ public class Menu {
      * */
     private void initProduct(List<Product> products) {
         if (products == null) {
-            this.products.add(new Product(products.size(), "아이스 아메리카노", BigDecimal.valueOf(1500l)));
+            this.products.add(new Product(this.products.size(), "아이스 아메리카노", BigDecimal.valueOf(1500l)));
         } else {
             this.products = products;
         }
