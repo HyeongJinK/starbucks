@@ -1,5 +1,6 @@
 package khj.pilot.product;
 
+import khj.pilot.exception.EmptyProductException;
 import khj.pilot.exception.OutOfStockException;
 import lombok.Getter;
 
@@ -23,7 +24,7 @@ public class Menu {
      * */
     private void initProduct(List<Product> products) {
         if (products == null) {
-            this.products.add(new Product(0, "아이스 아메리카노", BigDecimal.valueOf(1500l)));
+            this.products.add(new Product(products.size(), "아이스 아메리카노", BigDecimal.valueOf(1500l)));
         } else {
             this.products = products;
         }
@@ -37,10 +38,16 @@ public class Menu {
      * 상품정보 리턴
      * */
     public Product getProduct(int idx) {
-        System.out.println("=====================");
+        if (productIdxCheck(idx)) {
+            throw new EmptyProductException("상품이 없습니다.");
+        }
         Product product = products.get(idx);
 
         stockCheck(idx, product);
         return products.get(idx);
+    }
+
+    private boolean productIdxCheck(int idx) {
+        return idx >= products.size();
     }
 }
