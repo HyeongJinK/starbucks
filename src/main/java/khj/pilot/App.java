@@ -1,11 +1,14 @@
 package khj.pilot;
 
 import khj.pilot.store.Store;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 
 public class App 
 {
+    static Logger log = LoggerFactory.getLogger(App.class);
     public static void main( String[] args )
     {
         Store store = new Store();
@@ -13,29 +16,46 @@ public class App
         Scanner sc = new Scanner(System.in);
         String status = "";
         while (!isQuit(status)) {
-            System.out.print("입력(e[enter]: 영업시작, q[quit]: 종료  :" );
+            log.info("입력(e[enter]: 영업시작, p[print]: 매출조회, q[quit]: 종료  :" );
             status = sc.nextLine();
-            if (isEnter(status)) {
-                store.start();
-            }
+            inputProcess(store, status);
         }
         System.exit(0);
     }
 
-    public static boolean isEnter(String status) {
+    private static void inputProcess(Store store, String status) {
+        if (isEnter(status)) {
+            store.start();
+        } else if (isPrint(status)) {
+            store.printCalculate();
+        } else {
+            log.info("잘못된 입력입니다.");
+        }
+    }
+
+    public static boolean isStatusCheck(String status, String ...checkStr) {
         status = status.toLowerCase();
-        return status.equals("e") || status.equals("enter");
+        for (String str: checkStr) {
+            if (status.equals(str)) return true;
+        }
+        return false;
+    }
+
+    public static boolean isEnter(String status) {
+        return isStatusCheck(status, "e", "enter");
     }
 
     public static boolean isQuit(String status) {
-        status = status.toLowerCase();
-        return status.equals("q") || status.equals("quit");
+        return isStatusCheck(status, "q", "quit");
+    }
+
+    public static boolean isPrint(String status) {
+        return isStatusCheck(status, "p", "print");
     }
 }
 
 
 /**
- * TODO
  * - 주문 받기
  * - 정산 (총 매출 계산)
  * - 음료 제조 및 전달
@@ -48,9 +68,6 @@ public class App
  *             - 커피를 만들고 나서 손님의 이름을 불러주면 끝입니다.
  * - 손님이 커피를 받아가는 부분은 구현하지 않습니다.
  * - 출력은 `System.out.println` 대신 `Slf4j` 로그를 사용하면 편리합니다.
- *
- *
- *
  *
  * 스타벅스 매장 운영 조건
  *
